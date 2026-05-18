@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBuy — Compra Rápida, Entrega Segura</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark: #0a0b14;
+    --dark2: #10111e;
+    --dark3: #181928;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --cyan: #22d3ee;
+    --white: #f0f0f5;
+    --muted: #8b8fa8;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,11,20,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: linear-gradient(135deg, #7c3aed, #22d3ee);
+    color: #fff; border: none; padding: 0.55rem 1.5rem;
+    border-radius: 6px; font-family: 'Barlow', sans-serif;
+    font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    letter-spacing: 0.5px; text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 6rem 2.5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 55% at 70% 50%, rgba(124,58,237,0.22) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(34,211,238,0.12) 0%, transparent 60%);
+  }
+  .hero-grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    position: relative; z-index: 2;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35);
+    color: #c084fc; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 999px; margin-bottom: 1.4rem;
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c084fc; animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    line-height: 1.0;
+    letter-spacing: 2px;
+    margin-bottom: 1.4rem;
+  }
+  .hero-title span {
+    background: linear-gradient(90deg, #a855f7 0%, #22d3ee 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--muted); line-height: 1.75;
+    max-width: 460px; margin-bottom: 2.4rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #7c3aed, #22d3ee);
+    color: #fff; text-decoration: none;
+    padding: 0.85rem 2rem; border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem; font-weight: 700; letter-spacing: 1px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 24px rgba(124,58,237,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(124,58,237,0.5); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; border: 1.5px solid rgba(255,255,255,0.2);
+    color: var(--white); text-decoration: none;
+    padding: 0.85rem 2rem; border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem; font-weight: 700; letter-spacing: 1px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.05); }
+
+  /* HERO IMAGE */
+  .hero-image-wrap {
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  .hero-logo-img {
+    width: 420px; height: 420px; object-fit: contain;
+    position: relative; z-index: 2;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--dark3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+  }
+  .stats-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem; letter-spacing: 2px;
+    background: linear-gradient(90deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { padding: 6rem 2.5rem; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #a855f7; margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: 2px;
+    line-height: 1.1; margin-bottom: 1.4rem;
+  }
+  .section-title span {
+    background: linear-gradient(90deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+  .about-text p { color: var(--muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.2rem; }
+  .about-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .about-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.2rem 1.5rem;
+    display: flex; align-items: flex-start; gap: 1rem;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .about-card:hover { border-color: rgba(124,58,237,0.4); background: rgba(124,58,237,0.06); }
+  .about-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(34,211,238,0.15));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .about-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .about-card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* FEATURES */
+  .why-section { background: var(--dark2); }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem;
+  }
+  .feature-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .feature-card:hover { transform: translateY(-4px); border-color: rgba(124,58,237,0.4); }
+  .feature-icon {
+    font-size: 2rem; margin-bottom: 1rem; display: inline-block;
+    background: linear-gradient(135deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .feature-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 0.6rem; }
+  .feature-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+  /* BANNER */
+  .banner {
+    margin: 0 2.5rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1a0a2e 0%, #0c1a2e 100%);
+    border: 1px solid rgba(124,58,237,0.25);
+    padding: 3.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 2rem; flex-wrap: wrap;
+    position: relative; overflow: hidden;
+  }
+  .banner::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .banner::after {
+    content: '🐼';
+    position: absolute; bottom: -10px; right: 3rem;
+    font-size: 8rem; opacity: 0.06; pointer-events: none;
+    filter: grayscale(1);
+  }
+  .banner-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 0.6rem;
+  }
+  .banner-sub { color: var(--muted); font-size: 1rem; max-width: 480px; line-height: 1.7; }
+  .banner-cta {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #7c3aed, #22d3ee);
+    color: #fff; text-decoration: none;
+    padding: 1rem 2.2rem; border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: 1px;
+    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 24px rgba(124,58,237,0.35);
+  }
+  .banner-cta:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(124,58,237,0.55); }
+
+  /* FOOTER */
+  footer {
+    margin-top: 5rem;
+    background: var(--dark3);
+    border-top: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 3rem; flex-wrap: wrap;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px;
+    background: linear-gradient(90deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 0.6rem;
+  }
+  .footer-brand-text { font-size: 0.82rem; color: var(--muted); max-width: 280px; line-height: 1.7; }
+  .footer-links h4 { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-bottom {
+    max-width: 1200px; margin: 2rem auto 0;
+    padding-top: 1.5rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .trust-chips { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .trust-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.75rem; color: var(--muted);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner, .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-image-wrap { order: -1; }
+    .hero-logo-img { width: 260px; height: 260px; }
+    .hero-glow-ring { width: 300px; height: 300px; }
+    .hero-glow-ring-inner { width: 250px; height: 250px; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .banner { flex-direction: column; margin: 0 1rem; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .section { padding: 4rem 1.5rem; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .hero-logo-img { width: 200px; height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">QuickBuy</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#vantagens">Vantagens</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a class="nav-cta" href="loja.html">Comprar Agora</a>
+</nav>
+
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Compra 100% Segura
+      </div>
+      <h1 class="hero-title">
+        Rápido.<br>
+        Seguro.<br>
+        <span>QuickBuy.</span>
+      </h1>
+      <p class="hero-sub">
+        Produtos selecionados com qualidade, envio ágil e atendimento de verdade.
+        Na QuickBuy, cada pedido é preparado com cuidado do começo ao fim.
+      </p>
+      <div class="hero-btns">
+        <a href="loja.html" class="btn-primary">⚡ Ver Produtos</a>
+        <a href="#sobre" class="btn-secondary">Saiba mais →</a>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <img
+        src="./panda.png.png"
+        alt="QuickBuy — Panda Cyberpunk Logo"
+        class="hero-logo-img"
+      >
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Nota Fiscal Garantida</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">24h</div>
+      <div class="stat-label">Suporte disponível</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Reclamações sem resposta</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">⭐ 5.0</div>
+      <div class="stat-label">Avaliação dos clientes</div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="sobre">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-tag">Sobre a QuickBuy</div>
+        <h2 class="section-title">Uma loja criada para <span>simplificar</span> sua vida</h2>
+        <p>A QuickBuy nasceu com o objetivo de oferecer produtos úteis, práticos e de qualidade para facilitar o dia a dia dos nossos clientes. Trabalhamos com uma seleção cuidadosa de itens para casa, organização, viagem e uso cotidiano.</p>
+        <p>Prezamos pela transparência em todas as etapas: desde a descrição dos produtos até o envio do pedido. Nosso compromisso é entregar exatamente o que foi anunciado, com embalagem adequada, nota fiscal e suporte sempre que você precisar.</p>
+        <p>Sabemos que comprar pela internet exige confiança. Por isso oferecemos uma experiência simples, segura e profissional.</p>
+      </div>
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="about-icon">🛡️</div>
+          <div>
+            <div class="about-card-title">Compra Segura</div>
+            <div class="about-card-desc">Processo de compra protegido e atendimento humano de verdade em cada etapa.</div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">✅</div>
+          <div>
+            <div class="about-card-title">Produtos Selecionados</div>
+            <div class="about-card-desc">Cada item é escolhido com atenção à qualidade e à experiência do cliente.</div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">📦</div>
+          <div>
+            <div class="about-card-title">Envio Rápido e Seguro</div>
+            <div class="about-card-desc">Embalagem protegida, rastreio desde o despacho e entrega no prazo.</div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🧾</div>
+          <div>
+            <div class="about-card-title">Nota Fiscal em Todos os Pedidos</div>
+            <div class="about-card-desc">Transparência total: todos os pedidos saem com NF-e inclusa.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section why-section" id="vantagens">
+  <div class="section-inner">
+    <div class="section-tag">Por que escolher a QuickBuy</div>
+    <h2 class="section-title">O que nos <span>diferencia</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Segurança na Compra</div>
+        <p class="feature-desc">Ambiente seguro, dados protegidos e pagamento com garantia. Você compra com total tranquilidade.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Envio Ágil</div>
+        <p class="feature-desc">Pedidos preparados e despachados com rapidez. Rastreamento disponível assim que sair.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Suporte Real</div>
+        <p class="feature-desc">Atendimento antes, durante e depois da compra. Sua dúvida ou problema tem resposta garantida.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎁</div>
+        <div class="feature-title">Embalagem Cuidadosa</div>
+        <p class="feature-desc">Cada produto é embalado para chegar perfeito até você, com proteção reforçada e capricho.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Descrição Honesta</div>
+        <p class="feature-desc">Sem surpresas: você recebe exatamente o que está anunciado. Zero enganação.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌟</div>
+        <div class="feature-title">Qualidade Garantida</div>
+        <p class="feature-desc">Selecionamos fornecedores com critério. Só vendemos o que acreditamos e aprovamos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="banner" id="comprar">
+  <div class="banner-text">
+    <div class="banner-title">Pronto para comprar com confiança?</div>
+    <p class="banner-sub">
+      Compra segura, envio rápido e produtos de qualidade. Na QuickBuy, cada pedido é preparado com cuidado para garantir uma experiência confiável do começo ao fim.
+    </p>
+  </div>
+  <a class="banner-cta" href="loja.html">⚡ Acessar a Loja</a>
+</div>
+
+<footer id="contato">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">QuickBuy</div>
+      <p class="footer-brand-text">
+        A QuickBuy trabalha com produtos selecionados, emissão de nota fiscal e envio seguro. Nosso compromisso é oferecer uma compra transparente, prática e confiável para todos os clientes.
+      </p>
+      <div class="trust-chips" style="margin-top:1rem">
+        <span class="trust-chip">🛡️ Compra Segura</span>
+        <span class="trust-chip">📦 Envio Rastreado</span>
+        <span class="trust-chip">🧾 Nota Fiscal</span>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#sobre">Sobre a Loja</a></li>
+        <li><a href="#vantagens">Vantagens</a></li>
+        <li><a href="loja.html">Loja</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Políticas</h4>
+      <ul>
+        <li><a href="#">Política de Privacidade</a></li>
+        <li><a href="#">Termos de Uso</a></li>
+        <li><a href="#">Trocas e Devoluções</a></li>
+        <li><a href="#">Fale Conosco</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 QuickBuy. Todos os direitos reservados.</span>
+    <span>CNPJ: XX.XXX.XXX/0001-XX</span>
+  </div>
+</footer>
+
+</body>
+</html>
